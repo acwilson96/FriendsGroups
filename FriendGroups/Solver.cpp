@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <vector>
 #include <map>
+#include <algorithm>
 #include "Person.cpp"
 
 class Solver {
@@ -21,16 +22,17 @@ class Solver {
                     people[i] = new Person(i);
                 visitPerson(people[i], friendships);
             }
-            /*      @TODO:
-             *           Determine the number of friends groups.
-             */
-            // Now Everybody has all their friends connected.
-            for (auto pair: people) {
-                Person *currPerson = pair.second;
-                currPerson->printFriends();
+            int numberGroups = 0;
+            // Loop through all people, accounting for their friends, recursively marking if we have seen them.
+            // If we see a unique user who has not been visited, then they are the start of a new friends group.
+            for (int i = 0; i < friendships.size(); i++) {
+                Person *currPerson = people[i];
+                if (!currPerson->accountedFor) {
+                    numberGroups++;
+                    currPerson->determineGroup(currPerson);
+                }
             }
-            printf("\n-----------------------\n");
-            return 1;
+            return numberGroups;
         }
 
 

@@ -4,9 +4,24 @@
 class Person {
 
     public:
+
+        bool accountedFor = false;
+
         Person() {}
         Person(int person_id) {
             id = person_id;
+        }
+
+        void determineGroup(Person *caller) {
+            counted();
+            for (Person *f: friends) {
+                if (!f->accountedFor)
+                    f->determineGroup(this);
+            }
+        }
+
+        void counted() {
+            accountedFor = true;
         }
 
         /* Getter for Person's ID */
@@ -21,9 +36,7 @@ class Person {
 
         /* Adds a friend(Person) to this Persons friends list */
         void addFriend(Person *f) {
-            // printf("\n\tPerson %d Adding Person %d", id, f->getID());
             if (friends.count(f) == 0) {
-                // printf(" - Were not already Friends.");
                 friends.insert(f);
             }
         }
